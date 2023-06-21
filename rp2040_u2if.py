@@ -107,7 +107,7 @@ class RP2040_u2if:
         start = time.monotonic()
         while time.monotonic() - start < 5:
             try:
-                self._hid.open(self._vid, self._pid)
+                self._hid = hid.Device(self._vid, self._pid, self._serial)
             except OSError:
                 time.sleep(0.1)
                 continue
@@ -125,8 +125,8 @@ class RP2040_u2if:
         self._vid = vid
         self._pid = pid
         self._serial = serial
-        self._hid = hid.device()
-        self._hid.open(self._vid, self._pid, self._serial)
+        print("Opening HID device with VID: 0x{:04x} PID: 0x{:04x} Serial: {}".format(vid, pid, serial))
+        self._hid = hid.Device(self._vid, self._pid, self._serial)
         if RP2040_U2IF_RESET_DELAY >= 0:
             self._reset()
         self._opened = True
